@@ -155,7 +155,8 @@
         "q" #'symbol-overlay-remove-all)
       (:prefix "p"                      ; project
         "*" (+my/prefix-M-x "projectile-")
-        :desc "Update projectile list" "u" #'update-projectile-known-projects)
+        :desc "Update projectile list" "u" #'update-projectile-known-projects
+	:desc "Project Tree" "n" #'treemacs)
       (:prefix "t"                      ; toggle
         "c" #'centered-window-mode
         "r" #'rjsx-mode

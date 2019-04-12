@@ -52,5 +52,7 @@
 
 (menu-bar-mode t)
 
+(load-theme 'doom-dracula t)
+
 (add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
 (add-to-list 'auto-mode-alist '("\\.pb\\'" . protobuf-mode))
