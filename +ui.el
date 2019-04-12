@@ -1,12 +1,12 @@
 ;;; private/my/+ui.el -*- lexical-binding: t; -*-
 
-(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-one-light)
 
 (when (display-graphic-p)
-  (cond (IS-MAC
-         (setq doom-font (font-spec :family "Operator Mono Lig" :size 16)
-               doom-big-font (font-spec :family "Operator Mono Lig" :size 22)
-               doom-modeline-height 32))
+  (cond ;;(IS-MAC
+        ;; (setq ;;doom-font (font-spec :family "Operator Mono Lig" :size 16)
+               ;;doom-big-font (font-spec :family "Operator Mono Lig" :size 22)
+        ;;       doom-modeline-height 32))
         (IS-LINUX
          (setq resolution-factor (eval (/ (x-display-pixel-height) 1080.0)))
          (setq doom-font (font-spec :family "Operator Mono" :size (eval (round (* 16 resolution-factor))) :weight 'light)
@@ -25,7 +25,7 @@
 (remove-hook 'doom-init-ui-hook #'blink-cursor-mode)
 
 ;; disable line-numbers by default
-(setq display-line-numbers-type nil)
+;;(setq display-line-numbers-type nil)
 
 ;; my custom faces
 (defun +my/set-faces ()
@@ -50,10 +50,10 @@
    ))
 (add-hook! 'doom-load-theme-hook #'+my/set-faces)
 
-(when IS-MAC
+;(when IS-MAC
   ;; enable ligatures support
   ;; details here: https://github.com/tonsky/FiraCode/wiki/Emacs-instructions
-  (mac-auto-operator-composition-mode))
+;  (mac-auto-operator-composition-mode))
 
 (after! ibuffer
   ;; set ibuffer name column width

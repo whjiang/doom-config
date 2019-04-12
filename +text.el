@@ -88,6 +88,7 @@
   )
 
 (def-package! edit-indirect :defer t)
+(def-package! protobuf-mode :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; OTHERS
