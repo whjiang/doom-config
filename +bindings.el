@@ -98,7 +98,8 @@
         "U" #'+my/untabify-buffer)
       (:prefix "c"                      ; code
         :desc "Cspell check buffer"    "c" #'cspell-check-buffer
-        :desc "Cspell check directory" "C" #'cspell-check-directory)
+        :desc "Cspell check directory" "C" #'cspell-check-directory
+	:desc "Switch .cpp/.h file"    "h" #'ff-find-other-file)
       (:prefix "TAB"
         :desc "Switch workspace" "TAB" #'+workspace/switch-to
         :desc "Display tab bar"  "."   #'+workspace/display)

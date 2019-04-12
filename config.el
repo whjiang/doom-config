@@ -5,7 +5,7 @@
 (load! "+text")
 (load! "+prog")
 ;;(load! "+ui")
-;;(load! "+bindings")
+(load! "+bindings")
 
 (setq doom-scratch-buffer-major-mode 'emacs-lisp-mode)
 
