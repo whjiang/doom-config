@@ -16,56 +16,56 @@
       ;; font. This bugs me. Markdown #-marks for headlines are more elegant.
 ;;      org-bullets-bullet-list '("#"))
 
-(after! org
-  (setq org-capture-templates
-        '(("t" "Personal todo" entry
-           (file+headline +org-capture-todo-file "Inbox")
-           "* TODO %?\n%i" :prepend t :kill-buffer t)
-          ("n" "Personal notes" entry
-           (file+headline +org-capture-notes-file "Inbox")
-           "* %u %?\n%i" :prepend t :kill-buffer t)
+;; (after! org
+;;   (setq org-capture-templates
+;;         '(("t" "Personal todo" entry
+;;            (file+headline +org-capture-todo-file "Inbox")
+;;            "* TODO %?\n%i" :prepend t :kill-buffer t)
+;;           ("n" "Personal notes" entry
+;;            (file+headline +org-capture-notes-file "Inbox")
+;;            "* %u %?\n%i" :prepend t :kill-buffer t)
 
-          ;; Will use {project-root}/{todo,notes,changelog}.org, unless a
-          ;; {todo,notes,changelog}.org file is found in a parent directory.
-          ("p" "Templates for projects")
-          ("pt" "Project todo" entry    ; {project-root}/todo.org
-           (file+headline +org-capture-project-todo-file "Inbox")
-           "* TODO %?\n%i" :prepend t :kill-buffer t)
-          ("pn" "Project notes" entry   ; {project-root}/notes.org
-           (file+headline +org-capture-project-notes-file "Inbox")
-           "* TODO %?\n%i" :prepend t :kill-buffer t)
-          ("pc" "Project changelog" entry ; {project-root}/changelog.org
-           (file+headline +org-capture-project-notes-file "Unreleased")
-           "* TODO %?\n%i" :prepend t :kill-buffer t)))
+;;           ;; Will use {project-root}/{todo,notes,changelog}.org, unless a
+;;           ;; {todo,notes,changelog}.org file is found in a parent directory.
+;;           ("p" "Templates for projects")
+;;           ("pt" "Project todo" entry    ; {project-root}/todo.org
+;;            (file+headline +org-capture-project-todo-file "Inbox")
+;;            "* TODO %?\n%i" :prepend t :kill-buffer t)
+;;           ("pn" "Project notes" entry   ; {project-root}/notes.org
+;;            (file+headline +org-capture-project-notes-file "Inbox")
+;;            "* TODO %?\n%i" :prepend t :kill-buffer t)
+;;           ("pc" "Project changelog" entry ; {project-root}/changelog.org
+;;            (file+headline +org-capture-project-notes-file "Unreleased")
+;;            "* TODO %?\n%i" :prepend t :kill-buffer t)))
 
-  (setq org-log-into-drawer "LOGBOOK")
-
-
-  ;; Schedule/deadline popup with default time
-  (defvar org-default-time "10:30"
-    "The default time for deadlines.")
-
-  (defun advise-org-default-time (func arg &optional time)
-    (let ((old-time (symbol-function #'org-read-date)))
-      (cl-letf (((symbol-function #'org-read-date)
-                 #'(lambda (&optional a b c d default-time f g)
-                     (let ((default-time (or default-time
-                                             org-default-time)))
-                       (apply old-time a b c d f default-time g)
-                       ))))
-        (apply func arg time))))
-
-  (advice-add #'org-deadline :around #'advise-org-default-time)
-  (advice-add #'org-schedule :around #'advise-org-default-time))
+;;   (setq org-log-into-drawer "LOGBOOK")
 
 
-(def-package! org-wild-notifier
-  :defer t
-  :init
-  (add-hook 'doom-post-init-hook #'org-wild-notifier-mode t)
-  :config
-  (setq org-wild-notifier-alert-time 15
-        alert-default-style (if IS-MAC 'osx-notifier 'libnotify)))
+;;   ;; Schedule/deadline popup with default time
+;;   (defvar org-default-time "10:30"
+;;     "The default time for deadlines.")
+
+;;   (defun advise-org-default-time (func arg &optional time)
+;;     (let ((old-time (symbol-function #'org-read-date)))
+;;       (cl-letf (((symbol-function #'org-read-date)
+;;                  #'(lambda (&optional a b c d default-time f g)
+;;                      (let ((default-time (or default-time
+;;                                              org-default-time)))
+;;                        (apply old-time a b c d f default-time g)
+;;                        ))))
+;;         (apply func arg time))))
+
+;;   (advice-add #'org-deadline :around #'advise-org-default-time)
+;;   (advice-add #'org-schedule :around #'advise-org-default-time))
+
+
+;; (def-package! org-wild-notifier
+;;   :defer t
+;;   :init
+;;   (add-hook 'doom-post-init-hook #'org-wild-notifier-mode t)
+;;   :config
+;;   (setq org-wild-notifier-alert-time 15
+;;         alert-default-style (if IS-MAC 'osx-notifier 'libnotify)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
