@@ -1,42 +1,17 @@
-;;; private/my/config.el -*- lexical-binding: t; -*-
-(load! "+os")
-(load! "+misc")
-(load! "+text")
-(load! "+prog")
-(load! "+ui")
-(load! "+bindings")
+;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
 
-(setq doom-scratch-buffer-major-mode 'emacs-lisp-mode)
+;; Place your private configuration here
+;;
+(load! "programming")
+(load! "text")
 
-(setq-default fill-column 100
-              delete-trailing-lines t)
+ ;; Enable mouse support
+(unless window-system
+    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
-;; Delete the selection when pasting
-(delete-selection-mode 1)
+(xterm-mouse-mode -1)
 
-;; disable risky local variables warning
-(advice-add 'risky-local-variable-p :override #'ignore)
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
 
-;; check minified-file
-(add-to-list 'magic-mode-alist (cons #'+my/check-minified-file 'fundamental-mode))
-
-(set-popup-rules! '(("^\\*helpful" :size 0.35)
-                    ("^\\*Ibuffer\\*$" :size 0.35)
-                    ("^\\*info.*" :size 80 :side right)
-                    ("^\\*Man.*" :size 80 :side right)
-                    ("^\\*Customize" :actions display-buffer)
-                    ("^\\*edit-indirect" :size 0.6)
-                    ("^\\*YASnippet Tables\\*$" :size 0.35)
-                    ("^\\*grep\\*$" :size 0.35)
-                    ("^\\*Anaconda\\*$" :size 0.35)
-                    ("^\\*helm kill ring\\*$" :size 0.35)
-                    ((lambda (buf _) (with-current-buffer buf (eq major-mode 'forge-topic-mode))) :size 0.35)
-                    ))
-
-;; Load system profile for different machines
-(let ((profile "~/.config/doom/profile.el"))
-  (when (file-exists-p profile)
-    (load-file profile)))
-
-(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
-(add-to-list 'auto-mode-alist '("\\.pb\\'" . protobuf-mode))

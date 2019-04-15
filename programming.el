@@ -1,4 +1,5 @@
-;;; ~/.doom.d/+prog.el -*- lexical-binding: t; -*-
+;;; ~/.doom.d/programming.el -*- lexical-binding: t; -*-
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; COMPANY
@@ -19,76 +20,6 @@
   (setq company-transformers nil
         company-lsp-cache-candidates nil)
   (set-company-backend! 'lsp-mode 'company-lsp))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; FLYCHECK
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar cspell-base-program (executable-find "cspell"))
-(defvar cspell-config-file-path (concat "'" (expand-file-name  "~/Dotfiles/cspell.json") "'"))
-(defvar cspell-args (string-join `("--config" ,cspell-config-file-path) " "))
-(defun cspell-check-buffer ()
-  (interactive)
-  (if cspell-base-program
-      (let* ((file-name (concat "'" (buffer-file-name) "'"))
-             (command (string-join `(,cspell-base-program ,cspell-args ,file-name) " ")))
-        (compilation-start command 'grep-mode))
-    (message "Cannot find cspell, please install with `npm install -g csepll`")
-    ))
-
-(defun cspell-check-directory ()
-  (interactive)
-  (if cspell-base-program
-      (let* ((files "'**/*.{js,jsx,ts,tsx,c,cc,cpp,h,hh,hpp,go,json}'")
-             (command (string-join `(,cspell-base-program ,cspell-args ,files) " ")))
-        (compilation-start command 'grep-mode))
-    (message "Cannot find cspell, please install with `npm install -g csepll`")))
-
-
-;; (def-package! wucuo
-;;   :defer t
-;;   :init
-;;   (add-hook! (js2-mode rjsx-mode go-mode c-mode c++-mode) #'wucuo-start))
-
-
-(after! flycheck
-  (setq-default flycheck-disabled-checkers
-                '(
-                  javascript-jshint handlebars
-                  json-jsonlist json-python-json
-                  c/c++-clang c/c++-cppcheck c/c++-gcc
-                  python-pylint
-                  ))
-
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
-
-  ;; ======================== JS & TS ========================
-  (flycheck-add-mode 'typescript-tslint 'web-mode)
-  (after! tide
-    (flycheck-add-next-checker 'javascript-eslint '(t . javascript-tide) 'append)
-    (flycheck-add-next-checker 'javascript-eslint '(t . jsx-tide) 'append)
-    (flycheck-add-next-checker 'typescript-tslint '(t .  typescript-tide) 'append)
-    (flycheck-add-next-checker 'javascript-eslint '(t . tsx-tide) 'append))
-
-  ;; ======================== CC ========================
-  (require 'flycheck-google-cpplint)
-  (setq flycheck-c/c++-googlelint-executable "cpplint")
-  (flycheck-add-next-checker 'c/c++-gcc '(t . c/c++-googlelint))
-
-  (setq flycheck-c/c++-gcc-executable "gcc-7"
-        flycheck-gcc-include-path '("/usr/local/inclue"))
-
-  (add-hook! c++-mode-hook
-    (setq flycheck-gcc-language-standard "c++11"
-          flycheck-clang-language-standard "c++11"))
-  )
-
-(defun disable-flycheck-mode ()
-  (flycheck-mode -1))
-;; (add-hook! (emacs-lisp-mode) 'disable-flycheck-mode)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CC
@@ -111,6 +42,17 @@
 
   (add-to-list 'auto-mode-alist '("\\.inc\\'" . +cc-c-c++-objc-mode)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DEBUG & RUN
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! quickrun
+  (quickrun-add-command "c++/c1z"
+    '((:command . "clang++")
+      (:exec    . ("%c -std=c++1z %o -o %e %s"
+                   "%e %a"))
+      (:remove  . ("%e")))
+    :default "c++"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PYTHON
@@ -204,48 +146,93 @@
   (add-hook! go-mode #'lsp))
 
 
+;;add protobuf file detection
+(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
+(add-to-list 'auto-mode-alist '("\\.pb\\'" . protobuf-mode))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FLYCHECK
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar cspell-base-program (executable-find "cspell"))
+(defvar cspell-config-file-path (concat "'" (expand-file-name  "~/Dotfiles/cspell.json") "'"))
+(defvar cspell-args (string-join `("--config" ,cspell-config-file-path) " "))
+(defun cspell-check-buffer ()
+  (interactive)
+  (if cspell-base-program
+      (let* ((file-name (concat "'" (buffer-file-name) "'"))
+             (command (string-join `(,cspell-base-program ,cspell-args ,file-name) " ")))
+        (compilation-start command 'grep-mode))
+    (message "Cannot find cspell, please install with `npm install -g csepll`")
+    ))
+
+(defun cspell-check-directory ()
+  (interactive)
+  (if cspell-base-program
+      (let* ((files "'**/*.{js,jsx,ts,tsx,c,cc,cpp,h,hh,hpp,go,json}'")
+             (command (string-join `(,cspell-base-program ,cspell-args ,files) " ")))
+        (compilation-start command 'grep-mode))
+    (message "Cannot find cspell, please install with `npm install -g csepll`")))
+
+
+;; (def-package! wucuo
+;;   :defer t
+;;   :init
+;;   (add-hook! (js2-mode rjsx-mode go-mode c-mode c++-mode) #'wucuo-start))
+
+
+(after! flycheck
+  (setq-default flycheck-disabled-checkers
+                '(
+                  javascript-jshint handlebars
+                  json-jsonlist json-python-json
+                  c/c++-clang c/c++-cppcheck c/c++-gcc
+                  python-pylint
+                  ))
+
+  ;; customize flycheck temp file prefix
+  (setq-default flycheck-temp-prefix ".flycheck")
+
+  ;; ======================== JS & TS ========================
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (after! tide
+    (flycheck-add-next-checker 'javascript-eslint '(t . javascript-tide) 'append)
+    (flycheck-add-next-checker 'javascript-eslint '(t . jsx-tide) 'append)
+    (flycheck-add-next-checker 'typescript-tslint '(t .  typescript-tide) 'append)
+    (flycheck-add-next-checker 'javascript-eslint '(t . tsx-tide) 'append))
+
+  ;; ======================== CC ========================
+  (require 'flycheck-google-cpplint)
+  (setq flycheck-c/c++-googlelint-executable "cpplint")
+  (flycheck-add-next-checker 'c/c++-gcc '(t . c/c++-googlelint))
+
+  (setq flycheck-c/c++-gcc-executable "gcc-7"
+        flycheck-gcc-include-path '("/usr/local/inclue"))
+
+  (add-hook! c++-mode-hook
+    (setq flycheck-gcc-language-standard "c++11"
+          flycheck-clang-language-standard "c++11"))
+  )
+
+(defun disable-flycheck-mode ()
+  (flycheck-mode -1))
+;; (add-hook! (emacs-lisp-mode) 'disable-flycheck-mode)
+;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LSP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun toggle-lsp-ui-doc ()
-  (interactive)
-  (if lsp-ui-doc-mode
-      (progn
-        (lsp-ui-doc-mode -1)
-        (lsp-ui-doc--hide-frame))
-    (lsp-ui-doc-mode 1)))
-
-(defun my-lsp-mode-hook ()
-  ;; disable lsp-highlight-symbol
-  ;; (setq lsp-highlight-symbol-at-point nil)
-
-  ;; toggle off lsp-ui-doc by default
-  ;; (toggle-lsp-ui-doc)
-  )
-
-
 (def-package! lsp-ui
+  :defer t
+  :commands lsp-ui-mode
   :init
-  (add-hook 'lsp-ui-mode-hook #'my-lsp-mode-hook)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   :config
-  (setq lsp-prefer-flymake t
-        lsp-ui-sideline-enable nil
-        lsp-ui-doc-include-signature t)
-
-  ;; set lsp-ui-doc position
-  ;; (setq lsp-ui-doc-position 'at-point)
-  )
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; DEBUG & RUN
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(after! quickrun
-  (quickrun-add-command "c++/c1z"
-    '((:command . "clang++")
-      (:exec    . ("%c -std=c++1z %o -o %e %s"
-                   "%e %a"))
-      (:remove  . ("%e")))
-    :default "c++"))
+  (setq lsp-ui-peek-enable t)
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-imenu-enable t)
+  (setq lsp-ui-flycheck-enable t)
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-sideline-ignore-duplicate t))

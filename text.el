@@ -1,3 +1,5 @@
+;;; ~/.doom.d/text.el -*- lexical-binding: t; -*-
+
 ;;;  -*- lexical-binding: t; -*-
 
 (add-hook! 'text-mode-hook (setq-local truncate-lines nil))
@@ -6,13 +8,13 @@
 ;; ORG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq org-directory (expand-file-name "~/Dropbox/Org-Notes")
-      org-agenda-files (list org-directory)
-      org-ellipsis " ▼ "
+;;(setq org-directory (expand-file-name "~/Dropbox/Org-Notes")
+;;      org-agenda-files (list org-directory)
+;;      org-ellipsis " ▼ "
 
       ;; The standard unicode characters are usually misaligned depending on the
       ;; font. This bugs me. Markdown #-marks for headlines are more elegant.
-      org-bullets-bullet-list '("#"))
+;;      org-bullets-bullet-list '("#"))
 
 (after! org
   (setq org-capture-templates
@@ -93,18 +95,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; OTHERS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(def-package! blog-admin
-  :defer t
-  :commands blog-admin-start
-  :hook (blog-admin-backend-after-new-post . find-file)
-  :init
-  ;; do your configuration here
-  (setq blog-admin-backend-type 'hexo
-        blog-admin-backend-path "~/Developer/Github/hexo_blog"
-        blog-admin-backend-new-post-in-drafts t
-        blog-admin-backend-new-post-with-same-name-dir nil
-        blog-admin-backend-hexo-config-file "_config.yml"))
 
 (def-package! youdao-dictionary
   :defer t
