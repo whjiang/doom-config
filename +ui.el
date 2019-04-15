@@ -2,16 +2,20 @@
 
 ;;(setq doom-theme 'doom-one-light)
 
+(menu-bar-mode t)
+
+;;(load-theme 'doom-dracula t)
+
 (when (display-graphic-p)
   (cond ;;(IS-MAC
-        ;; (setq ;;doom-font (font-spec :family "Operator Mono Lig" :size 16)
-               ;;doom-big-font (font-spec :family "Operator Mono Lig" :size 22)
-        ;;       doom-modeline-height 32))
-        (IS-LINUX
-         (setq resolution-factor (eval (/ (x-display-pixel-height) 1080.0)))
-         (setq doom-font (font-spec :family "Operator Mono" :size (eval (round (* 16 resolution-factor))) :weight 'light)
-               doom-big-font (font-spec :family "Operator Mono" :size (eval (round (* 22 resolution-factor))))
-               doom-modeline-height (eval (round (* 32 resolution-factor))))))
+   ;; (setq ;;doom-font (font-spec :family "Operator Mono Lig" :size 16)
+   ;;doom-big-font (font-spec :family "Operator Mono Lig" :size 22)
+   ;;       doom-modeline-height 32))
+   (IS-LINUX
+    (setq resolution-factor (eval (/ (x-display-pixel-height) 1080.0)))
+    (setq doom-font (font-spec :family "Operator Mono" :size (eval (round (* 16 resolution-factor))) :weight 'light)
+          doom-big-font (font-spec :family "Operator Mono" :size (eval (round (* 22 resolution-factor))))
+          doom-modeline-height (eval (round (* 32 resolution-factor))))))
 
   ;; set initl screen size
   (setq initial-frame-alist

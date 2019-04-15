@@ -1,10 +1,9 @@
 ;;; private/my/config.el -*- lexical-binding: t; -*-
-
 (load! "+os")
 (load! "+misc")
 (load! "+text")
 (load! "+prog")
-;;(load! "+ui")
+(load! "+ui")
 (load! "+bindings")
 
 (setq doom-scratch-buffer-major-mode 'emacs-lisp-mode)
@@ -38,21 +37,6 @@
 (let ((profile "~/.config/doom/profile.el"))
   (when (file-exists-p profile)
     (load-file profile)))
-
-
- ;; Enable mouse support
-(unless window-system
-    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
-
-(xterm-mouse-mode -1)
-
-(global-set-key (kbd "<home>") 'beginning-of-line)
-(global-set-key (kbd "<end>") 'end-of-line)
-
-(menu-bar-mode t)
-
-(load-theme 'doom-dracula t)
 
 (add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
 (add-to-list 'auto-mode-alist '("\\.pb\\'" . protobuf-mode))

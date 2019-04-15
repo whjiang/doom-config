@@ -21,6 +21,7 @@
        ;;+fuzzy)          ; enable fuzzy search backend for helm
        ;;ido               ; the other *other* search engine...
        (ivy              ; a search engine for love and life
+        +fuzzy
         +childframe)
 
        :ui
@@ -28,7 +29,7 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-modeline     ; a snazzy Atom-inspired mode-line
-       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        evil-goggles      ; display visual hints when editing in evil
        ;;fci               ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE tags
@@ -70,7 +71,7 @@
        direnv
        docker
        editorconfig      ; let someone else argue about tabs vs spaces
-       ein               ; tame Jupyter notebooks with emacs
+       ;;ein               ; tame Jupyter notebooks with emacs
        (flycheck
         +childframe)     ; tasing you for every semicolon you forget
        flyspell          ; tasing you for misspelling mispelling
@@ -81,11 +82,11 @@
        magit             ; a git porcelain for Emacs
        ;;password-store    ; password manager for nerds
        pdf               ; pdf enhancements
-       prodigy           ; FIXME managing external services & code builders
-       rgb               ; creating color strings
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
        ;;terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
-       upload            ; map local to remote projects via ssh/ftp
+       ;;upload            ; map local to remote projects via ssh/ftp
        ;;wakatime
        vterm             ; another terminals in Emacs
 
@@ -103,12 +104,12 @@
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;;ess               ; emacs speaks statistics
-       (go +lsp)                ; the hipster dialect
+       ;;(go +lsp)                ; the hipster dialect
        ;;(haskell +intero) ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
-       java              ; the poster child for carpal tunnel syndrome ;(java +meghanada)
-       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;java              ; the poster child for carpal tunnel syndrome ;(java +meghanada)
+       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        ;;latex             ; writing papers in Emacs has never been so fun
        ;;ledger            ; an accounting system in Emacs
@@ -137,11 +138,11 @@
        ;;rest              ; Emacs as a REST client
        ;;ruby              ; 1.step do {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       scala             ; java, but good
+       ;;scala             ; java, but good
        sh                ; she sells (ba|z)sh shells on the C xor
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
-       web               ; the tubes
+       ;;web               ; the tubes
        ;;vala              ; GObjective-C
 
        ;; Applications are complex and opinionated modules that transform Emacs
@@ -171,5 +172,5 @@
        (default +bindings +snippets +smartparens)
 
        :private
-       lsp-intellij
+       ;;lsp-intellij
        )
