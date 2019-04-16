@@ -41,7 +41,7 @@ ln -Fs `sudo find /usr/local/Cellar/emacs-mac -name "Emacs.app"` /Applications/E
   1. natural-title-bar usage [[https://github.com/railwaycat/homebrew-emacsmacport/wiki/Natural-Title-Bar][here]].
   2. Solution to incoming network connection:
      Codesign your Emacs.app. Instructions over [[http://apple.stackexchange.com/questions/3271/how-to-get-rid-of-firewall-accept-incoming-connections-dialog/170566][here]].
-     ~codesign --deep --force --verbose --sign ztlevi /usr/local/opt/emacs-mac/Emacs.app~
+     ~codesign --deep --force --verbose --sign whjiang /usr/local/opt/emacs-mac/Emacs.app~
   #+END_QUOTE
 *** Linux
 #+BEGIN_SRC shell
@@ -60,7 +60,7 @@ rm -r ~/.emacs.d
 git clone https://github.com/hlissner/doom-emacs -b develop ~/.emacs.d
 
 # Clone my config
-git clone https://github.com/ztlevi/doom-config ~/.doom.d
+git clone https://github.com/whjiang/doom-config ~/.doom.d
 
 cd ~/.emacs.d
 make quickstart
