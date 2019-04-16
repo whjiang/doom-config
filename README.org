@@ -166,6 +166,14 @@ defaults write org.gnu.Emacs Emacs.ScrollBar -string no
 defaults write org.gnu.Emacs Emacs.MenuBar -string no
 #+END_SRC
 
+
+If you are using MAC iterm2 to ssh to remote Linux machine, ensure following
+setting made:
+
+#+BEGIN_QUOTE
+Preference -> Profiles -> select a profile -> Keys -> Left Option Key as ESC+
+#+END_QUOTE
+
 * Features
 An in-depth list of features, how to use them, and their dependencies.
 
