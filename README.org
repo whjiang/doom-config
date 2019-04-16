@@ -171,7 +171,10 @@ If you are using MAC iterm2 to ssh to remote Linux machine, ensure following
 setting made:
 
 #+BEGIN_QUOTE
+# to enable meta key
 Preference -> Profiles -> select a profile -> Keys -> Left Option Key as ESC+
+# to correctly show selected region
+Preference -> Profiles -> select a profile -> Colors -> Color Presets -> Pastel
 #+END_QUOTE
 
 * Features
