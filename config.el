@@ -18,3 +18,8 @@
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
 
+(map! :leader
+      (:prefix "c"                      ; code
+	:desc "Switch .cpp/.h file"    "h" #'ff-find-other-file)
+)
+
