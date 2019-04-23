@@ -28,7 +28,7 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       evil-goggles      ; display visual hints when editing in evil
+       ;;evil-goggles      ; display visual hints when editing in evil
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        ;;indent-guides     ; highlighted indent columns
@@ -125,6 +125,7 @@
         +babel           ; running code in org
         +capture         ; org-capture in and outside of Emacs
         +export          ; Exporting org to whatever you want
+	+habit
         +present         ; Emacs for presentations
         +protocol)       ; Support for org-protocol:// links
        ;;perl              ; write code no one else can comprehend

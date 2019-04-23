@@ -16,7 +16,7 @@
       ;; font. This bugs me. Markdown #-marks for headlines are more elegant.
 ;;      org-bullets-bullet-list '("#"))
 
-(after! org
+(after! org                          
   (setq org-capture-templates
         '(("t" "Personal todo" entry
            (file+headline +org-capture-todo-file "Inbox")
@@ -43,7 +43,10 @@
         (apply func arg time))))
 
   (advice-add #'org-deadline :around #'advise-org-default-time)
-  (advice-add #'org-schedule :around #'advise-org-default-time))
+  (advice-add #'org-schedule :around #'advise-org-default-time)
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+)
 
 
 (def-package! org-wild-notifier

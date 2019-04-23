@@ -5,3 +5,18 @@
 ;; (package! some-package)
 ;; (package! another-package :recipe (:fetcher github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
+
+;; disabled packages
+
+;; misc
+(packages! avy
+           edit-indirect
+           link-hint
+           symbol-overlay
+           tldr
+           youdao-dictionary
+           wucuo
+           org-wild-notifier
+           (vterm-toggle :recipe (:fetcher github :repo "jixiuf/vterm-toggle"))
+           )
+
