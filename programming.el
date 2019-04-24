@@ -242,12 +242,14 @@
   "Finds the build directory of a CMake project"
   (let ((cmakefile nil) (dirname default-directory))
     ; Step 1: Find the CMakeFile in the parent directorie
-    (while (not (string= dirname "/"))
+    (setq depth 10)
+    (while (and (not (string= dirname "/")) (> depth 0))
+      (setq depth (1- depth))
+      (message dirname)
       (setq cmakefile (concat (file-name-as-directory dirname) "CMakeLists.txt"))
       (if (not (file-exists-p cmakefile))
-          (progn
-            (setq cmakefile nil)
-            (setq dirname (expand-file-name (concat (file-name-as-directory dirname) ".."))))))
+            (setq cmakefile nil))
+      (setq dirname (expand-file-name (concat (file-name-as-directory dirname) ".."))))
     ; Step 2: Check if the build directory is there, and if so,
     ; whether there's a Makefile in it (i.e. cmake has been run)
     (if cmakefile
