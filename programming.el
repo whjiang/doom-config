@@ -243,4 +243,10 @@
              (set (make-local-variable 'compile-command)
                   "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
                 )))
+ (add-hook 'c++-mode-hook
+           (lambda ()
+             (set (make-local-variable 'compile-command)
+                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
+                )))
+
 ;;c++-mode-hook
