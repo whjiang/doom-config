@@ -237,16 +237,35 @@
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-ignore-duplicate t))
 
+;;find the top directory has CMakeLists.txt and create a build directory under it
+(defun find-cmake-builddir ()
+  "Finds the build directory of a CMake project"
+  (let ((cmakefile nil) (dirname default-directory))
+    ; Step 1: Find the CMakeFile in the parent directorie
+    (while (not (string= dirname "/"))
+      (setq cmakefile (concat (file-name-as-directory dirname) "CMakeLists.txt"))
+      (if (not (file-exists-p cmakefile))
+          (progn
+            (setq cmakefile nil)
+            (setq dirname (expand-file-name (concat (file-name-as-directory dirname) ".."))))))
+    ; Step 2: Check if the build directory is there, and if so,
+    ; whether there's a Makefile in it (i.e. cmake has been run)
+    (if cmakefile
+        (let ((builddir (concat (file-name-directory cmakefile) "build")))
+          (if (not (file-exists-p builddir))
+              (mkdir builddir))
+          (set (make-local-variable 'compile-command) (concat "cd " (shell-quote-argument builddir) " && cmake .. && make -j 4"))))))
+(add-hook 'c-mode-common-hook 'find-cmake-builddir)
 ;;(require 'compile)
- (add-hook 'c-mode-hook
-           (lambda ()
-             (set (make-local-variable 'compile-command)
-                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
-                )))
- (add-hook 'c++-mode-hook
-           (lambda ()
-             (set (make-local-variable 'compile-command)
-                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
-                )))
+ ;; (add-hook 'c-mode-hook
+ ;;           (lambda ()
+ ;;             (set (make-local-variable 'compile-command)
+ ;;                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
+ ;;                )))
+ ;; (add-hook 'c++-mode-hook
+ ;;           (lambda ()
+ ;;             (set (make-local-variable 'compile-command)
+ ;;                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
+ ;;                )))
 
 ;;c++-mode-hook
