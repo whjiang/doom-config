@@ -73,8 +73,6 @@
 
 (map!
  ;; Unix text-editing keys & motions
- :gi "C-n" #'next-line
- :gi "C-p" #'previous-line
  :gi "C-b" #'backward-char
  :gi "C-f" #'forward-char
  :gi "C-k" #'kill-line
