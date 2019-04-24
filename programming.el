@@ -245,18 +245,19 @@
     (setq depth 10)
     (while (and (not (string= dirname "/")) (> depth 0))
       (setq depth (1- depth))
-      (message dirname)
-      (setq cmakefile (concat (file-name-as-directory dirname) "CMakeLists.txt"))
-      (if (not (file-exists-p cmakefile))
-            (setq cmakefile nil))
+      (setq detect (concat (file-name-as-directory dirname) "CMakeLists.txt"))
+      (if (file-exists-p detect)
+           (setq cmakefile detect))
       (setq dirname (expand-file-name (concat (file-name-as-directory dirname) ".."))))
     ; Step 2: Check if the build directory is there, and if so,
     ; whether there's a Makefile in it (i.e. cmake has been run)
     (if cmakefile
+      (progn
+        (message "Found CMakeLists.txt at %s" cmakefile)
         (let ((builddir (concat (file-name-directory cmakefile) "build")))
           (if (not (file-exists-p builddir))
               (mkdir builddir))
-          (set (make-local-variable 'compile-command) (concat "cd " (shell-quote-argument builddir) " && cmake .. && make -j 4"))))))
+          (set (make-local-variable 'compile-command) (concat "cd " (shell-quote-argument builddir) " && cmake .. && make -j 4")))))))
 (add-hook 'c-mode-common-hook 'find-cmake-builddir)
 ;;(require 'compile)
  ;; (add-hook 'c-mode-hook
