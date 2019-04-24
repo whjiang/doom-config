@@ -273,6 +273,6 @@
 
 ;;c++-mode-hook
 
+;;For all programming modes
 ;;treat underscore(_) as part of a word to be consistent with VIM
-(add-hook 'c-mode-common-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-(add-hook 'java-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+(add-hook 'prog-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
