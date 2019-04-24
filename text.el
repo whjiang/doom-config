@@ -46,6 +46,15 @@
   (advice-add #'org-schedule :around #'advise-org-default-time)
 
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq org-refile-targets
+        '(("hiring.org" :maxlevel . 1)
+          ("project.org" :maxlevel . 3)
+          ("meeting.org" :maxlevel . 1)
+          ("reading.org" :maxlevel . 3)
+          ("personal.org" :maxlevel . 3)))
+  ;;(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  ;;(setq org-refile-use-outline-path 'file)
+  ;;(setq org-outline-path-complete-in-steps nil)
 )
 
 

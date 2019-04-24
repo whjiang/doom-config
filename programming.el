@@ -236,3 +236,11 @@
   (setq lsp-ui-flycheck-enable t)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-ignore-duplicate t))
+
+;;(require 'compile)
+ (add-hook 'c-mode-hook
+           (lambda ()
+             (set (make-local-variable 'compile-command)
+                  "cd ${PWD%/src/*} && mkdir -p build && cd build && cmake .. && make -j 4"
+                )))
+;;c++-mode-hook
