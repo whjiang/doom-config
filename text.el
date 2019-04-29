@@ -52,6 +52,14 @@
           ("meeting.org" :maxlevel . 1)
           ("reading.org" :maxlevel . 3)
           ("personal.org" :maxlevel . 3)))
+
+  (setq org-agenda-text-search-extra-files (file-expand-wildcards "~/org/*.org_archive"))
+  ;; (setq org-agenda-custom-commands
+  ;; '(("n" . "Search in notes")
+  ;;   ("nt" "Note tags search" tags ""
+  ;;    ((org-agenda-text-search-extra-files (file-expand-wildcards "*.org_archive"))))
+  ;;   ("ns" "Note full text search" search ""
+  ;;    ((org-agenda-text-search-extra-files (file-expand-wildcards "*.org_archive"))))))
   ;;(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
   ;;(setq org-refile-use-outline-path 'file)
   ;;(setq org-outline-path-complete-in-steps nil)

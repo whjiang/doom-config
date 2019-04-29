@@ -5,7 +5,9 @@
 (load! "programming")
 (load! "text")
 (load! "bindings")
+(load! "chinese")
 
+;;start emacs in maximized mode
 ;; (let ((px (display-pixel-width))
 ;;   (py (display-pixel-height))
 ;;   (fx (frame-char-width))
@@ -17,5 +19,5 @@
 ;; (add-to-list 'default-frame-alist (cons 'width tx))
 ;; (add-to-list 'default-frame-alist (cons 'height ty)))
 
-
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
