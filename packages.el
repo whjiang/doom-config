@@ -18,5 +18,5 @@
            wucuo
            org-wild-notifier
            (vterm-toggle :recipe (:fetcher github :repo "jixiuf/vterm-toggle"))
-	   pyim
+;;           pyim
            )

@@ -5,7 +5,7 @@
 (load! "programming")
 (load! "text")
 (load! "bindings")
-(load! "chinese")
+;;(load! "chinese")
 
 ;;start emacs in maximized mode
 ;; (let ((px (display-pixel-width))
