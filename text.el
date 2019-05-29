@@ -19,11 +19,15 @@
 (after! org                          
   (setq org-capture-templates
         '(("t" "Personal todo" entry
-           (file+headline +org-capture-todo-file "Inbox")
+           (file+headline "~/org/todo.org" "Inbox")
            "* TODO %?\n%i" :prepend t :kill-buffer t)
           ("n" "Personal notes" entry
-           (file+headline +org-capture-notes-file "Inbox")
-           "* %u %?\n%i" :prepend t :kill-buffer t)))
+           (file+headline "~/org/personal.org" "Inbox")
+           "* %u %?\n%i" :prepend t :kill-buffer t)
+          ("p" "Project notes" entry
+           (file+headline "~/org/project.org" "Inbox")
+           "* %u %?\n%i" :prepend t :kill-buffer t)
+	))
 
    (setq org-log-into-drawer "LOGBOOK")
 
@@ -47,11 +51,16 @@
 
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
-        '(("hiring.org" :maxlevel . 1)
-          ("project.org" :maxlevel . 3)
-          ("meeting.org" :maxlevel . 1)
-          ("reading.org" :maxlevel . 3)
-          ("personal.org" :maxlevel . 3)))
+        '(
+          ("project.org" :maxlevel . 1)
+          ("reading.org" :maxlevel . 1)
+          ("personal.org" :maxlevel . 1)))
+  (when IS-MAC
+    (find-file "~/org/project.org")
+    (find-file "~/org/personal.org")
+    (find-file "~/org/reading.org")
+    (switch-to-buffer "*doom*")
+    )
 
   (setq org-agenda-text-search-extra-files (file-expand-wildcards "~/org/*.org_archive"))
   ;; (setq org-agenda-custom-commands
@@ -124,3 +133,7 @@
 (def-package! link-hint :defer t)
 
 (def-package! symbol-overlay :defer t)
+
+;;auto save org files
+(add-hook 'focus-out-hook
+        (lambda () (org-save-all-org-buffers)))
