@@ -159,8 +159,8 @@
         +langtool)       ; a proofreader (grammar/style check) for Emacs
 
 	:term
-       ;;eshell		     ; a consistent, cross-platform shell (WIP)
-       vterm             ; another terminals in Emacs
+       eshell		     ; a consistent, cross-platform shell (WIP)
+       ;;vterm             ; another terminals in Emacs
 
        :collab
        ;;floobits          ; peer programming for a price
