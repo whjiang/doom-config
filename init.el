@@ -86,7 +86,6 @@
        tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
        ;;wakatime
-       ;;vterm             ; another terminals in Emacs
 
        :lang
        ;;assembly          ; assembly for fun or debugging
@@ -160,7 +159,8 @@
         +langtool)       ; a proofreader (grammar/style check) for Emacs
 
 	:term
-       eshell		     ; a consistent, cross-platform shell (WIP)
+       ;;eshell		     ; a consistent, cross-platform shell (WIP)
+       vterm             ; another terminals in Emacs
 
        :collab
        ;;floobits          ; peer programming for a price
