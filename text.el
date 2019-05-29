@@ -2,6 +2,8 @@
 
 ;;;  -*- lexical-binding: t; -*-
 
+(setq evil-want-fine-undo 'yes)
+
 (add-hook! 'text-mode-hook (setq-local truncate-lines nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
