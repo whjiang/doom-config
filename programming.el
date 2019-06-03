@@ -298,3 +298,6 @@
 ;;For all programming modes
 ;;treat underscore(_) as part of a word to be consistent with VIM
 (add-hook 'prog-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+
+;;avoid next-error in compilation to split window
+(setq split-width-threshold nil)
