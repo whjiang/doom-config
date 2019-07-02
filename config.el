@@ -21,3 +21,5 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;enable copy from terminal emacs
+(remove-hook 'tty-setup-hook #'xterm-mouse-mode)
