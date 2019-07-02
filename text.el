@@ -33,7 +33,9 @@
 
    (setq org-log-into-drawer "LOGBOOK")
 
-
+   (add-to-list 'org-emphasis-alist
+                '("*" (:foreground "red")
+                  ))
   ;; Schedule/deadline popup with default time
   (defvar org-default-time "10:30"
     "The default time for deadlines.")
@@ -139,6 +141,10 @@
     (org-nav-hydra/body)
     )
   (map! :leader (:prefix ("m" . "localleader") "n" #'org-nav))
+
+  ;;auto save org files
+  (add-hook 'focus-out-hook
+   (lambda () (org-save-all-org-buffers)))
 )
 
 
@@ -201,9 +207,6 @@
 
 (def-package! symbol-overlay :defer t)
 
-;;auto save org files
-(add-hook 'focus-out-hook
-        (lambda () (org-save-all-org-buffers)))
 
 (defun my/open-tree-view ()
   "Open a clone of the current buffer to the left, resize it to 30 columns, and bind <mouse-1> to jump to the same position in the base buffer."
