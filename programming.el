@@ -1,5 +1,12 @@
 ;;; ~/.doom.d/programming.el -*- lexical-binding: t; -*-
 
+(after! tramp
+	'(setenv "SHELL" "/bin/bash")
+	;;(setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
+	(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+	(add-to-list 'tramp-connection-properties
+	     (list ".*" "locale" "LC_ALL=C")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; COMPANY
@@ -24,6 +31,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(after! lsp-mode
+(setq lsp-print-io t)
+
+(lsp-register-client
+ (make-lsp-client
+  :new-connection (lsp-tramp-connection (lambda () (list* "/home/guobei.jwh/bin/ccls" ccls-args)))
+  :major-modes '(c-mode c++-mode cuda-mode objc-mode)
+  :server-id 'ccls-remote
+  :remote? t
+  :notification-handlers
+  (lsp-ht ("$ccls/publishSkippedRanges" #'ccls--publish-skipped-ranges)
+          ("$ccls/publishSemanticHighlight" #'ccls--publish-semantic-highlight))
+  :initialization-options (lambda () nil)
+  :library-folders-fn nil))
+)
+
+
+(custom-set-variables
+ '(tramp-default-method "ssh")
+ '(tramp-default-user "guobei.jwh")
+ '(tramp-default-host "11.163.188.81#35829"))
+
 
 (after! cc-mode
   (c-add-style
@@ -280,7 +310,7 @@
               (mkdir builddir))
           (set (make-local-variable 'compile-command) (concat "cd " (shell-quote-argument builddir) " && cmake .. && make -j 4")))))))
 
-(add-hook 'c-mode-common-hook 'find-cmake-builddir)
+;;(add-hook 'c-mode-common-hook 'find-cmake-builddir)
 ;;(require 'compile)
  ;; (add-hook 'c-mode-hook
  ;;           (lambda ()
