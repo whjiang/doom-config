@@ -18,3 +18,16 @@
 ;(when IS-MAC (setq mac-command-modifier 'meta
 ;;                   mac-option-modifier  'alt))
 
+(map!
+ ;; Unix text-editing keys & motions
+   :gi "C-b" #'backward-char
+   :gi "C-f" #'forward-char
+   :gi "C-k" #'kill-line
+   :gi "C-d" #'delete-forward-char
+)
+
+(map! :leader
+(:prefix "c"                      ; code
+	:desc "Switch .cpp/.h file"    "h" #'ff-find-other-file)
+) 
+
