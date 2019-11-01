@@ -148,7 +148,7 @@
 )
 
 
-(def-package! org-wild-notifier
+(use-package! org-wild-notifier
   :defer t
   :init
   (add-hook 'doom-post-init-hook #'org-wild-notifier-mode t)
@@ -178,14 +178,14 @@
     (advice-add #'markdown-preview :override #'+my/markdown-preview))
   )
 
-(def-package! edit-indirect :defer t)
-(def-package! protobuf-mode :defer t)
+(use-package! edit-indirect :defer t)
+(use-package! protobuf-mode :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; OTHERS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def-package! youdao-dictionary
+(use-package! youdao-dictionary
   :defer t
   :config
   ;; Enable Cache
@@ -196,16 +196,16 @@
         ;; Enable Chinese word segmentation support
         youdao-dictionary-use-chinese-word-segmentation t))
 
-(def-package! tldr
+(use-package! tldr
   :defer t
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
   (set-popup-rule! "^\\*tldr\\*" :side 'right :select t :quit t)
   )
 
-(def-package! link-hint :defer t)
+(use-package! link-hint :defer t)
 
-(def-package! symbol-overlay :defer t)
+(use-package! symbol-overlay :defer t)
 
 
 (defun my/open-tree-view ()

@@ -1,6 +1,6 @@
 ;;; pyim
 
-;;(def-package! pyim
+;;(use-package! pyim
 ;;  :demand t
 ;;
 ;;  :config
@@ -30,7 +30,7 @@
 ;;(add-to-list 'load-path "~/.doom.d/liberime")
 ;;(require 'liberime)
 
- (def-package! pyim
+ (use-package! pyim
    :defer 1
    :config
    ;; 激活 basedict 拼音词库，五笔用户请继续阅读 README
@@ -131,7 +131,7 @@
 ;;   (run-with-timer 15 nil
 ;;                   (lambda () (cd "~"))))
 
-;; (def-package! fcitx
+;; (use-package! fcitx
 ;;   :defer t
 ;;   :config
 ;;   ;; Make sure the following comes before `(fcitx-aggressive-setup)'
