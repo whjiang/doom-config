@@ -14,6 +14,8 @@
 
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
+;for tmux
+(global-set-key (kbd "<select>") 'end-of-line)
 
 ;(when IS-MAC (setq mac-command-modifier 'meta
 ;;                   mac-option-modifier  'alt))
