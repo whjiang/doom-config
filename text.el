@@ -53,18 +53,16 @@
   (advice-add #'org-deadline :around #'advise-org-default-time)
   (advice-add #'org-schedule :around #'advise-org-default-time)
 
-  (setq org-image-actual-width nil)
+  (setq org-image-actual-width (/ (display-pixel-width) 3))
 
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
         '(
           ("project.org" :maxlevel . 1)
-          ("reading.org" :maxlevel . 1)
           ("personal.org" :maxlevel . 1)))
   (when IS-MAC
-    (find-file "~/org/project.org")
-    (find-file "~/org/personal.org")
-    (find-file "~/org/reading.org")
+    (find-file-read-only "~/org/project.org")
+    (find-file-read-only "~/org/personal.org")
     (switch-to-buffer "*doom*")
     )
 
