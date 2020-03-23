@@ -310,7 +310,14 @@
               (mkdir builddir))
           (set (make-local-variable 'compile-command) (concat "cd " (shell-quote-argument builddir) " && cmake .. && make -j 4")))))))
 
-;;(add-hook 'c-mode-common-hook 'find-cmake-builddir)
+(defun set-make-cmd ()
+  "Set the build command to build.sh"
+  (setq (project-root (projectile-project-root)))
+  (if project-root
+          (set (make-local-variable 'compile-command) (concat (shell-quote-argument project-root)  "/build.sh"))
+  ))
+
+(add-hook 'c-mode-common-hook 'set-make-cmd)
 ;;(require 'compile)
  ;; (add-hook 'c-mode-hook
  ;;           (lambda ()
