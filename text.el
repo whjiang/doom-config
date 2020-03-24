@@ -10,29 +10,89 @@
 ;; ORG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(setq org-directory (expand-file-name "~/Dropbox/Org-Notes")
-;;      org-agenda-files (list org-directory)
-;;      org-ellipsis " ▼ "
 
       ;; The standard unicode characters are usually misaligned depending on the
       ;; font. This bugs me. Markdown #-marks for headlines are more elegant.
 ;;      org-bullets-bullet-list '("#"))
 
-(after! org                          
+(after! org
+  (defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
+
+
+
+;; Code based mostly on file+headline part of org-capture-set-target-location
+;; Look for a headline that matches whatever *my-journal-headline-format* is
+;; If it's not there insert it; otherwise position the cursor at the end of the
+;; subtree.
+;; (defconst *my-journal-headline-format* "WorkLog %Y-%m-%d %A")
+;; (defun jww/find-journal-tree ()
+;;   "Find or create my default journal tree"
+;;   (setq hd (format-time-string *my-journal-headline-format*))
+;;   (goto-char (point-min))
+;;   (unless (derived-mode-p 'org-mode)
+;;     (error
+;;      "Target buffer \"%s\" for jww/find-journal-tree should be in Org mode"
+;;      (current-buffer)))
+;;   (if (re-search-forward
+;;        (format org-complex-heading-regexp-format (regexp-quote hd))
+;;        nil t)
+;;       (goto-char (point-at-bol))
+;;     (goto-char (point-min))
+;;     (or (bolp) (insert "\n"))
+;;     (insert "* " hd "\n")
+;;     (beginning-of-line 0))
+;;   (org-end-of-subtree))
+
   (setq org-capture-templates
-        '(("t" "Personal todo" entry
-           (file+headline "~/org/todo.org" "Inbox")
-           "* TODO %?\n%i" :prepend t :kill-buffer t)
-          ("n" "Personal notes" entry
-           (file+headline "~/org/personal.org" "Inbox")
-           "* %u %?\n%i" :prepend t :kill-buffer t)
-          ("p" "Project notes" entry
-           (file+headline "~/org/project.org" "Inbox")
-           "* %u %?\n%i" :prepend t :kill-buffer t)
-	))
+      (quote (("t" "Project todo" entry (file+headline "~/org/project.org" "Inbox")
+               "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
+              ("n" "Project note" entry (file "~/org/project.org" "Inbox")
+               "* NOTE %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
+              ("f" "Personal todo" entry (file+headline "~/org/personal.org" "Inbox")
+               "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
+;;              ("j" "Work log" entry (file+headline "~/org/project.org" "WorkLog")
+;;               "* NOTE -%Y-%m-%d%^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
+              ;; note the use of "plain" instead of "entry"; using "entry" made this a top-level
+              ;; headline regardless of how many * I put in the template string (wtf?).
+              ("j" "Journal" entry (file+olp+datetree "~/org/project.org" "Work Log")
+               "** %<%H:%M> - %?\n" :kill-buffer t)
+;;              ("j" "Journal entry" entry (function org-journal-find-location)
+;;                               "* %(format-time-string org-journal-time-format) %^{Title}\n%i%?" :kill-buffer t)
+              )))
+  ;; (setq org-capture-templates
+  ;;       '(("t" "Peroject Todo" entry
+  ;;          (file+headline "~/org/todo.org" "Inbox")
+  ;;          "* TODO %?\n%i" :prepend t :kill-buffer t)
+  ;;         ("n" "Personal notes" entry
+  ;;          (file+headline "~/org/personal.org" "Inbox")
+  ;;          "* %u %?\n%i" :prepend t :kill-buffer t)
+  ;;         ("p" "Project notes" entry
+  ;;          (file+headline "~/org/project.org" "Inbox")
+  ;;          "* %u %?\n%i" :prepend t :kill-buffer t)
+	;; ))
+   
+   (setq org-directory (expand-file-name "~/org")
+      org-agenda-files (list org-directory)
+      )
 
    (setq org-log-into-drawer "LOGBOOK")
 
+   (setq org-journal-dir "~/org/journal"
+	 org-journal-file-format "diary-%Y-%m-%d"
+	 org-journal-date-prefix "#+TITLE: "
+	 org-journal-date-format "%Y-%m-%d %A"
+	 org-journal-time-prefix "* "
+	 org-journal-time-format "%H:%M"
+	 org-journal-enable-agenda-integration t
+	 )
+   ;;(add-to-list 'org-agenda-files org-journal-dir)
+   
    (add-to-list 'org-emphasis-alist
                 '("*" (:foreground "red")
                   ))
@@ -40,31 +100,37 @@
   (defvar org-default-time "10:30"
     "The default time for deadlines.")
 
-  (defun advise-org-default-time (func arg &optional time)
-    (let ((old-time (symbol-function #'org-read-date)))
-      (cl-letf (((symbol-function #'org-read-date)
-                 #'(lambda (&optional a b c d default-time f g)
-                     (let ((default-time (or default-time
-                                             org-default-time)))
-                       (apply old-time a b c d f default-time g)
-                       ))))
-        (apply func arg time))))
+  ;; (defun advise-org-default-time (func arg &optional time)
+  ;;   (let ((old-time (symbol-function #'org-read-date)))
+  ;;     (cl-letf (((symbol-function #'org-read-date)
+  ;;                #'(lambda (&optional a b c d default-time f g)
+  ;;                    (let ((default-time (or default-time
+  ;;                                            org-default-time)))
+  ;;                      (apply old-time a b c d f default-time g)
+  ;;                      ))))
+  ;;       (apply func arg time))))
 
-  (advice-add #'org-deadline :around #'advise-org-default-time)
-  (advice-add #'org-schedule :around #'advise-org-default-time)
+  ;; (advice-add #'org-deadline :around #'advise-org-default-time)
+  ;; (advice-add #'org-schedule :around #'advise-org-default-time)
 
   (setq org-image-actual-width (/ (display-pixel-width) 3))
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  ;; Popup rules
+  ;; Make org-agenda pop up to right of screen, 45% of width
+  (set-popup-rule! "^\\*Org Agenda" :side 'right :size 0.45 :select t :ttl nil)
+  ;; Same for org-ql
+  (set-popup-rule! "^\\*Org QL" :side 'right :size 0.40 :select t :ttl nil)
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
         '(
           ("project.org" :maxlevel . 1)
           ("personal.org" :maxlevel . 1)))
-  (when IS-MAC
-    (find-file-read-only "~/org/project.org")
-    (find-file-read-only "~/org/personal.org")
-    (switch-to-buffer "*doom*")
-    )
+  ;; (when IS-MAC
+  ;;   (find-file-read-only "~/org/project.org")
+  ;;   (find-file-read-only "~/org/personal.org")
+  ;;   (switch-to-buffer "*doom*")
+  ;;   )
 
   (setq org-agenda-text-search-extra-files (file-expand-wildcards "~/org/*.org_archive"))
   ;; (setq org-agenda-custom-commands
@@ -77,58 +143,58 @@
   ;;(setq org-refile-use-outline-path 'file)
   ;;(setq org-outline-path-complete-in-steps nil)
 
-  (defun forward-and-preview ()
-    (interactive)
-    "Go to same level next heading and show preview in dedicated buffer"
-    (hide-subtree)
-    (org-speed-move-safe (quote outline-next-visible-heading))
-    (show-children)
-    (org-tree-to-indirect-buffer)
-    )
-  (defun back-and-preview ()
-    (interactive)
-    "Go to same level previous heading and show preview in dedicated buffer"
-    (hide-subtree)
-    (org-speed-move-safe (quote outline-previous-visible-heading))
-    (show-children)
-    (org-tree-to-indirect-buffer)
-    )
-  (defun up-back-and-preview ()
-    (interactive)
-    "Go to previous level heading and show preview in dedicated buffer"
-    (org-speed-move-safe (quote outline-up-heading))
-    (org-tree-to-indirect-buffer)
-    (hide-subtree)
-    )
-  (defun up-forward-and-preview ()
-    (interactive)
-    "Go to previous level next heading and show preview in dedicated buffer"
-    (org-speed-move-safe (quote outline-up-heading))
-    (hide-subtree)
-    (org-speed-move-safe (quote outline-next-visible-heading))
-    (org-tree-to-indirect-buffer)
-    )
-  (defun inside-and-preview ()
-    (interactive)
-    "Go to next level heading and show preview in dedicated buffer"
-    (org-speed-move-safe (quote outline-next-visible-heading))
-    (show-children)
-    (org-tree-to-indirect-buffer)
-    )
-  (defhydra org-nav-hydra (:hint nil)
-    "
-         _k_
-      _h_     _l_
-         _j_
-    "
-    ("h" up-back-and-preview)
-    ("j" forward-and-preview)
-    ("k" back-and-preview)
-    ("l" inside-and-preview)
-    ("J" up-forward-and-preview "up forward")
-    ("K" up-back-and-preview "up backward")
-    ("q" winner-undo "quit" :exit t)
-    )
+  ;; (defun forward-and-preview ()
+  ;;   (interactive)
+  ;;   "Go to same level next heading and show preview in dedicated buffer"
+  ;;   (hide-subtree)
+  ;;   (org-speed-move-safe (quote outline-next-visible-heading))
+  ;;   (show-children)
+  ;;   (org-tree-to-indirect-buffer)
+  ;;   )
+  ;; (defun back-and-preview ()
+  ;;   (interactive)
+  ;;   "Go to same level previous heading and show preview in dedicated buffer"
+  ;;   (hide-subtree)
+  ;;   (org-speed-move-safe (quote outline-previous-visible-heading))
+  ;;   (show-children)
+  ;;   (org-tree-to-indirect-buffer)
+  ;;   )
+  ;; (defun up-back-and-preview ()
+  ;;   (interactive)
+  ;;   "Go to previous level heading and show preview in dedicated buffer"
+  ;;   (org-speed-move-safe (quote outline-up-heading))
+  ;;   (org-tree-to-indirect-buffer)
+  ;;   (hide-subtree)
+  ;;   )
+  ;; (defun up-forward-and-preview ()
+  ;;   (interactive)
+  ;;   "Go to previous level next heading and show preview in dedicated buffer"
+  ;;   (org-speed-move-safe (quote outline-up-heading))
+  ;;   (hide-subtree)
+  ;;   (org-speed-move-safe (quote outline-next-visible-heading))
+  ;;   (org-tree-to-indirect-buffer)
+  ;;   )
+  ;; (defun inside-and-preview ()
+  ;;   (interactive)
+  ;;   "Go to next level heading and show preview in dedicated buffer"
+  ;;   (org-speed-move-safe (quote outline-next-visible-heading))
+  ;;   (show-children)
+  ;;   (org-tree-to-indirect-buffer)
+  ;;   )
+  ;; (defhydra org-nav-hydra (:hint nil)
+  ;;   "
+  ;;        _k_
+  ;;     _h_     _l_
+  ;;        _j_
+  ;;   "
+  ;;   ("h" up-back-and-preview)
+  ;;   ("j" forward-and-preview)
+  ;;   ("k" back-and-preview)
+  ;;   ("l" inside-and-preview)
+  ;;   ("J" up-forward-and-preview "up forward")
+  ;;   ("K" up-back-and-preview "up backward")
+  ;;   ("q" winner-undo "quit" :exit t)
+  ;;   )
   (defun org-nav ()
     (interactive)
     "Fold everything but the current heading and enter org-nav-hydra"
@@ -249,3 +315,52 @@
       (org-narrow-to-element)
       (org-show-children)
       )))
+
+
+;; (def-package! org-super-agenda
+;;  :after org-agenda
+;;  :init
+;;  (setq org-agenda-skip-scheduled-if-done t
+;;      org-agenda-skip-deadline-if-done t
+;;      org-agenda-include-deadlines t
+;;      org-agenda-block-separator nil
+;;      org-agenda-compact-blocks t
+;;      org-agenda-start-day nil ;; i.e. today
+;;      org-agenda-span 1
+;;      org-agenda-start-on-weekday nil)
+;;  (setq org-agenda-custom-commands
+;;        '(("c" "Super view"
+;;           ((agenda "" ((org-agenda-overriding-header "")
+;;                        (org-super-agenda-groups
+;;                         '((:name "Today"
+;;                                  :time-grid t
+;;                                  :date today
+;;                                  :order 1)))))
+;;            (alltodo "" ((org-agenda-overriding-header "")
+;;                         (org-super-agenda-groups
+;;                          '((:log t)
+;;                            (:name "To refile"
+;;                                   :file-path "refile\\.org")
+;;                            (:name "Next to do"
+;;                                   :todo "NEXT"
+;;                                   :order 1)
+;;                            (:name "Important"
+;;                                   :priority "A"
+;;                                   :order 6)
+;;                            (:name "Today's tasks"
+;;                                   :file-path "journal/")
+;;                            (:name "Due Today"
+;;                                   :deadline today
+;;                                   :order 2)
+;;                            (:name "Scheduled Soon"
+;;                                   :scheduled future
+;;                                   :order 8)
+;;                            (:name "Overdue"
+;;                                   :deadline past
+;;                                   :order 7)
+;;                            (:name "Meetings"
+;;                                   :and (:todo "MEET" :scheduled future)
+;;                                   :order 10)
+;;                            (:discard (:not (:todo "TODO")))))))))))
+;;  :config
+;;  (org-super-agenda-mode))
