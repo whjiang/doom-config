@@ -62,6 +62,10 @@
               ;; headline regardless of how many * I put in the template string (wtf?).
               ("j" "Journal" entry (file+olp+datetree "~/org/project.org" "Work Log")
                "** %<%H:%M> - %?\n" :kill-buffer t)
+              ("i" "Interview" entry (file+headline "~/org/project.org" "Hiring")
+               "* NOTE %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
+              ("m" "Meeting Notes" entry (file+headline "~/org/project.org" "Meeting")
+               "* %<%Y-%m-%d %H:%M> - 会议 %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
 ;;              ("j" "Journal entry" entry (function org-journal-find-location)
 ;;                               "* %(format-time-string org-journal-time-format) %^{Title}\n%i%?" :kill-buffer t)
               )))
