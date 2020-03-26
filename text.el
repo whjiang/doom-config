@@ -3,6 +3,7 @@
 ;;;  -*- lexical-binding: t; -*-
 
 (setq evil-want-fine-undo 'yes)
+(defalias 'forward-evil-word 'forward-evil-symbol)
 
 (add-hook! 'text-mode-hook (setq-local truncate-lines nil))
 
@@ -16,6 +17,9 @@
 ;;      org-bullets-bullet-list '("#"))
 
 (after! org
+
+  (global-set-key (kbd "<f12>") 'org-agenda)
+
   (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
   ;; inhibit inserting the heading; org-capture will insert the heading.
@@ -52,7 +56,7 @@
   (setq org-capture-templates
       (quote (("t" "Project todo" entry (file+headline "~/org/project.org" "Inbox")
                "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
-              ("n" "Project note" entry (file "~/org/project.org" "Inbox")
+              ("n" "Project note" entry (file+headline "~/org/project.org" "Inbox")
                "* NOTE %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
               ("f" "Personal todo" entry (file+headline "~/org/personal.org" "Inbox")
                "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
@@ -125,7 +129,7 @@
   ;; Same for org-ql
   (set-popup-rule! "^\\*Org QL" :side 'right :size 0.40 :select t :ttl nil)
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "ASSIGNED(a)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
         '(
           ("project.org" :maxlevel . 1)

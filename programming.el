@@ -37,7 +37,7 @@
 
 (lsp-register-client
  (make-lsp-client
-  :new-connection (lsp-tramp-connection (lambda () (list* "/home/guobei.jwh/bin/ccls" ccls-args)))
+  :new-connection (lsp-tramp-connection (lambda () (list* "/home/guobei.jwh/app/bin/ccls" ccls-args)))
   :major-modes '(c-mode c++-mode cuda-mode objc-mode)
   :server-id 'ccls-remote
   :remote? t
@@ -317,7 +317,7 @@
           (set (make-local-variable 'compile-command) (concat (shell-quote-argument project-root)  "/build.sh"))
   ))
 
-(add-hook 'c-mode-common-hook 'set-make-cmd)
+;;(add-hook 'c-mode-common-hook 'set-make-cmd)
 ;;(require 'compile)
  ;; (add-hook 'c-mode-hook
  ;;           (lambda ()
