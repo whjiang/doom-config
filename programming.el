@@ -32,19 +32,23 @@
 ;; CC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(after! lsp-mode
+(after! (lsp-mode ccls)
 (setq lsp-print-io t)
 
+;;(ccls-executable (executable-find "ccls")) ; Add ccls to path if you haven't done so
+;;(ccls-sem-highlight-method 'font-lock)
+;;(ccls-enable-skipped-ranges nil)
 (lsp-register-client
  (make-lsp-client
   :new-connection (lsp-tramp-connection (lambda () (list* "/home/guobei.jwh/app/bin/ccls" ccls-args)))
   :major-modes '(c-mode c++-mode cuda-mode objc-mode)
   :server-id 'ccls-remote
+  :multi-root nil
   :remote? t
   :notification-handlers
   (lsp-ht ("$ccls/publishSkippedRanges" #'ccls--publish-skipped-ranges)
           ("$ccls/publishSemanticHighlight" #'ccls--publish-semantic-highlight))
-  :initialization-options (lambda () nil)
+  :initialization-options (lambda () ccls-initialization-options)
   :library-folders-fn nil))
 )
 

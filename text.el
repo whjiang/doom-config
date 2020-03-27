@@ -15,7 +15,6 @@
       ;; The standard unicode characters are usually misaligned depending on the
       ;; font. This bugs me. Markdown #-marks for headlines are more elegant.
 ;;      org-bullets-bullet-list '("#"))
-
 (after! org
 
   (global-set-key (kbd "<f12>") 'org-agenda)
@@ -28,8 +27,21 @@
   ;; will add the new entry as a child entry.
   (goto-char (point-min)))
 
+  (defun my/org-agenda-done (&optional arg)
+    "Mark current TODO as done.
+     This changes the line at point, all other lines in the agenda referring to
+     the same tree node, and the headline of the tree node in the Org-mode file."
+    (interactive "P")
+    (org-agenda-todo "DONE")
+    (org-clock-out-if-current)
+    )
 
-
+  (defun my/org-agenda-mode-fn ()
+    (evil-set-initial-state 'org-agenda-mode 'emacs)
+    (define-key org-agenda-mode-map "x" 'my/org-agenda-done)
+    )
+  (add-hook 'org-agenda-mode-hook #'my/org-agenda-mode-fn)
+ 
 ;; Code based mostly on file+headline part of org-capture-set-target-location
 ;; Look for a headline that matches whatever *my-journal-headline-format* is
 ;; If it's not there insert it; otherwise position the cursor at the end of the
@@ -54,21 +66,25 @@
 ;;   (org-end-of-subtree))
 
   (setq org-capture-templates
-      (quote (("t" "Project todo" entry (file+headline "~/org/project.org" "Inbox")
+      (quote (("t" "Project todo" entry (file+headline "project.org" "Inbox")
                "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
-              ("n" "Project note" entry (file+headline "~/org/project.org" "Inbox")
+              ("n" "Project note" entry (file+headline "project.org" "Inbox")
                "* NOTE %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
-              ("f" "Personal todo" entry (file+headline "~/org/personal.org" "Inbox")
+              ("f" "Personal todo" entry (file+headline "personal.org" "Inbox")
                "* TODO %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
-;;              ("j" "Work log" entry (file+headline "~/org/project.org" "WorkLog")
+;;              ("j" "Work log" entry (file+headline "project.org" "WorkLog")
 ;;               "* NOTE -%Y-%m-%d%^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
               ;; note the use of "plain" instead of "entry"; using "entry" made this a top-level
               ;; headline regardless of how many * I put in the template string (wtf?).
-              ("j" "Journal" entry (file+olp+datetree "~/org/project.org" "Work Log")
-               "** %<%H:%M> - %?\n" :kill-buffer t)
-              ("i" "Interview" entry (file+headline "~/org/project.org" "Hiring")
+              ("j" "Journal(done)" entry (file+olp+datetree "project.org" "Work Log")
+               "** DONE %<%Y-%m-%d %H:%M> - %? \t:me:\nSCHEDULED: %T\n" :kill-buffer t)
+              ;; "** DONE %<%H:%M> - %?\n" :kill-buffer t)
+              ("d" "Journal(doing)" entry (file+olp+datetree "project.org" "Work Log")
+               "** DOING %^{Description} \t%U \t:me:\nSCHEDULED: %T\n%?\n" :clock-in t :clock-keep t)
+               ;;"** DOING %<%Y-%m-%d %H:%M> - %^{Description} \t:me:\n%?\nSCHEDULED: %T\n" :clock-in t :clock-keep t)
+              ("i" "Interview" entry (file+headline "project.org" "Hiring")
                "* NOTE %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
-              ("m" "Meeting Notes" entry (file+headline "~/org/project.org" "Meeting")
+              ("m" "Meeting Notes" entry (file+headline "project.org" "Meeting")
                "* %<%Y-%m-%d %H:%M> - 会议 %^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
 ;;              ("j" "Journal entry" entry (function org-journal-find-location)
 ;;                               "* %(format-time-string org-journal-time-format) %^{Title}\n%i%?" :kill-buffer t)
@@ -89,6 +105,7 @@
       org-agenda-files (list org-directory)
       )
 
+   (setq org-log-done 'time)
    (setq org-log-into-drawer "LOGBOOK")
 
    (setq org-journal-dir "~/org/journal"
@@ -129,7 +146,7 @@
   ;; Same for org-ql
   (set-popup-rule! "^\\*Org QL" :side 'right :size 0.40 :select t :ttl nil)
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "ASSIGNED(a)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "ASSIGNED(a)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
         '(
           ("project.org" :maxlevel . 1)
