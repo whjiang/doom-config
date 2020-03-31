@@ -1,5 +1,11 @@
 ;;; ~/.doom.d/programming.el -*- lexical-binding: t; -*-
 
+(when (not (display-graphic-p))
+  (use-package! clipetty
+		:ensure t
+		:hook (after-init . global-clipetty-mode))
+  )
+
 (after! tramp
 	'(setenv "SHELL" "/bin/bash")
 	;;(setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
