@@ -6,7 +6,7 @@
 (defalias 'forward-evil-word 'forward-evil-symbol)
 
 (add-hook! 'text-mode-hook (setq-local truncate-lines nil))
-
+;; (add-hook 'org-mode-hook #'evil-normalize-keymaps)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39,7 +39,9 @@
   (defun my/org-agenda-mode-fn ()
     (evil-set-initial-state 'org-agenda-mode 'emacs)
     (define-key org-agenda-mode-map "x" 'my/org-agenda-done)
+    (hl-line-mode 1)
     )
+;;  (set-face-attribute 'hl-line nil :foreground nil :background "RoyalBlue4")
   (add-hook 'org-agenda-mode-hook #'my/org-agenda-mode-fn)
  
 ;; Code based mostly on file+headline part of org-capture-set-target-location
