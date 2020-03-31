@@ -37,7 +37,7 @@
     )
 
   (defun my/org-agenda-mode-fn ()
-    (evil-set-initial-state 'org-agenda-mode 'emacs)
+    ;;(evil-set-initial-state 'org-agenda-mode 'emacs)
     (define-key org-agenda-mode-map "x" 'my/org-agenda-done)
     (hl-line-mode 1)
     )
