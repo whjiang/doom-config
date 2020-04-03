@@ -43,6 +43,18 @@
     )
 ;;  (set-face-attribute 'hl-line nil :foreground nil :background "RoyalBlue4")
   (add-hook 'org-agenda-mode-hook #'my/org-agenda-mode-fn)
+
+  ;;automatic set the captured item's tags according to the input
+  ;; (defun my/org-auto-tag ()
+  ;; (interactive)
+  ;; (let ((alltags (append org-tag-persistent-alist org-tag-alist))
+  ;;       (headline-words (split-string (org-get-heading t t)))
+  ;;       )
+  ;;   (mapcar (lambda (word) (if (assoc word alltags)
+  ;;                            (org-toggle-tag word 'on)))
+  ;;           headline-words))
+  ;;   )
+  ;; (add-hook 'org-capture-before-finalize-hook #'my/org-auto-tag())
  
 ;; Code based mostly on file+headline part of org-capture-set-target-location
 ;; Look for a headline that matches whatever *my-journal-headline-format* is
@@ -78,10 +90,10 @@
 ;;               "* NOTE -%Y-%m-%d%^{Description}\n%?\n\n:LOGBOOK:\n:Added: %U\n:END:\n\n" :prepend t :kill-buffer t)
               ;; note the use of "plain" instead of "entry"; using "entry" made this a top-level
               ;; headline regardless of how many * I put in the template string (wtf?).
-              ("j" "Journal(done)" entry (file+olp+datetree "project.org" "Work Log")
-               "** DONE %<%Y-%m-%d %H:%M> - %? \t:me:\nSCHEDULED: %T\n" :kill-buffer t)
+              ("j" "Journal(done)" entry (file+olp+datetree "diary.org" "Work Log")
+               "** DONE %^{Description} \t%U \t:me:\nSCHEDULED: %T\n%?\n" :kill-buffer t)
               ;; "** DONE %<%H:%M> - %?\n" :kill-buffer t)
-              ("d" "Journal(doing)" entry (file+olp+datetree "project.org" "Work Log")
+              ("d" "Journal(doing)" entry (file+olp+datetree "diary.org" "Work Log")
                "** DOING %^{Description} \t%U \t:me:\nSCHEDULED: %T\n%?\n" :clock-in t :clock-keep t)
                ;;"** DOING %<%Y-%m-%d %H:%M> - %^{Description} \t:me:\n%?\nSCHEDULED: %T\n" :clock-in t :clock-keep t)
               ("i" "Interview" entry (file+headline "project.org" "Hiring")
@@ -151,6 +163,7 @@
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "ASSIGNED(a)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-refile-targets
         '(
+          ("diary.org" :maxlevel . 1)
           ("project.org" :maxlevel . 1)
           ("personal.org" :maxlevel . 1)))
   ;; (when IS-MAC
