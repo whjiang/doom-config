@@ -1,11 +1,21 @@
 ;;; ~/.doom.d/programming.el -*- lexical-binding: t; -*-
 
 
-(after! clipetty
-	(when (not (display-graphic-p))
-	  (global-clipetty-mode)
-	  )
-	)
+;; (after! clipetty
+;; 	(when (not (display-graphic-p))
+;; 	  (global-clipetty-mode)
+;; 	  )
+;; 	)
+;;
+;;以下片段将缓冲区*compilation*标记为特殊，并将自定义函数设置为其显示功能，即使已经在拆分窗口中也可以拆分当前窗口。
+(setq special-display-buffer-names
+      '("*compilation*"))
+
+(setq special-display-function
+      (lambda (buffer &optional args)
+        (split-window)
+        (switch-to-buffer buffer)
+        (get-buffer-window buffer 0)))
 
 (after! tramp
 	'(setenv "SHELL" "/bin/bash")
