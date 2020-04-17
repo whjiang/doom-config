@@ -188,6 +188,7 @@
 
        :whjiang
        org
+       chinese  ;;copied from cnforyour, only change the librime root dir
        )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
