@@ -247,8 +247,9 @@
   (map! :leader (:prefix ("m" . "localleader") "n" #'org-nav))
 
   ;;auto save org files
-  (add-hook 'focus-out-hook
-   (lambda () (org-save-all-org-buffers)))
+;;  (add-hook 'focus-out-hook
+;;   (lambda () (org-save-all-org-buffers)))
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 )
 
 
