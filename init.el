@@ -81,7 +81,7 @@
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
        lsp
-       ;;macos             ; MacOS-specific commands
+       (:if IS-MAC macos)             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
@@ -188,7 +188,7 @@
 
        :whjiang
        org
-       chinese  ;;copied from cnforyour, only change the librime root dir
+       (:if IS-MAC chinese)  ;;copied from cnforyour, only change the librime root dir
        )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

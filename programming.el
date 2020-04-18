@@ -25,6 +25,10 @@
 	(add-to-list 'tramp-connection-properties
 	     (list ".*" "locale" "LC_ALL=C")))
 
+;;exclude 'debug' dir from projectile file list
+(after! projectile
+	 (add-to-list 'projectile-globally-ignored-directories "debug")
+	 )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; COMPANY
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
