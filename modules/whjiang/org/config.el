@@ -33,6 +33,16 @@
     )
 ;;  (set-face-attribute 'hl-line nil :foreground nil :background "RoyalBlue4")
   (add-hook 'org-agenda-mode-hook #'my/org-agenda-mode-fn)
+  ;; perform actions before finalizing agenda view
+  (add-hook 'org-agenda-finalize-hook
+            (lambda ()
+              (setq appt-message-warning-time 10        ;; warn 10 min in advance
+                    appt-display-diary nil              ;; do not display diary when (appt-activate) is called
+                    appt-display-mode-line t            ;; show in the modeline
+                    appt-display-format 'window         ;; display notification in window
+                    calendar-mark-diary-entries-flag t) ;; mark diary entries in calendar
+              (org-agenda-to-appt)                      ;; copy all agenda schedule to appointments
+              (appt-activate 1)))
 
   ;;automatic set the captured item's tags according to the input
   ;; (defun my/org-auto-tag ()
@@ -150,7 +160,22 @@
   ;; Same for org-ql
   (set-popup-rule! "^\\*Org QL" :side 'right :size 0.40 :select t :ttl nil)
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "ASSIGNED(a)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)")))
+  (setq org-todo-keywords
+        '((sequence "TODO(t!)"
+                    "NEXT(n!)"
+                    "ASSIGNED(a!)"
+                    "DOING(i!)"
+                    "|"
+                    "DONE(d!)"
+                    "CANCELLED(c!)")))
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "orange"       :weight bold)
+          ("NEXT" :foreground "yellow"       :weight bold)
+          ("ASSIGNED" :foreground "white"        :weight bold)
+          ("DOING" :foreground "forest green" :weight bold)
+          ("DONE" :foreground "grey" :weight bold)
+          ("CANCELLED" :foreground "red"          :weight bold)))
+
   (setq org-refile-targets
         '(
           ("diary.org" :maxlevel . 1)
@@ -161,6 +186,43 @@
   ;;   (find-file-read-only "~/org/personal.org")
   ;;   (switch-to-buffer "*doom*")
   ;;   )
+
+  ;; exclude done tasks from refile targets
+  (setq org-refile-target-verify-function #'+org-gtd/verify-refile-target)
+  ;; resume clocking when emacs is restarted
+  (org-clock-persistence-insinuate)
+   ;; clock out when moving task to a done state
+  (setq org-clock-out-when-done t)
+  ;; save the running clock and all clock history when exiting Emacs, load it on startup
+  (setq org-clock-persist t)
+  ;; do not prompt to resume an active clock
+  (setq org-clock-persist-query-resume nil)
+  ;; enable auto clock resolution for finding open clocks
+  (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+  (setq org-clock-out-remove-zero-time-clocks t)
+  ;; inhibit startup when preparing agenda buffer
+  (setq org-agenda-inhibit-startup nil)
+  ;; limit number of days before showing a future deadline
+  (setq org-deadline-warning-days 7)
+  ;; Number of days to include in overview display.
+  (setq org-agenda-span 'week)
+  ;; retain ignore options in tags-todo search
+  (setq org-agenda-tags-todo-honor-ignore-options t)
+  ;; remove completed deadline tasks from the agenda view
+  ;; (setq org-agenda-skip-deadline-if-done t)
+  ;; remove completed scheduled tasks from the agenda view
+  ;; (setq org-agenda-skip-scheduled-if-done t)
+  ;; remove completed items from search results
+  ;; (setq org-agenda-skip-timestamp-if-done t)
+  ;; skip scheduled delay when entry also has a deadline.
+  ;; (setq org-agenda-skip-scheduled-delay-if-deadline t)
+  ;; 设置超过Headline的重复任务不再显示
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'repeated-after-deadline)
+  ;; 设置为DONE或CANCELLED状态时，会生成CLOSED时间戳
+  (setq org-log-done 'time)
+  ;; 代码块语法高亮
+  (setq org-src-fontify-natively t)
 
   (setq org-agenda-text-search-extra-files (file-expand-wildcards "~/org/*.org_archive"))
   ;; (setq org-agenda-custom-commands
@@ -250,6 +312,32 @@
   :config
   (setq org-wild-notifier-alert-time 15
         alert-default-style (if IS-MAC 'osx-notifier 'libnotify)))
+
+
+;; terminal-notifier
+(after! org-pomodoro
+  (when (executable-find "terminal-notifier")
+    (defun notify-osx (title message)
+      (call-process "terminal-notifier"
+                    nil 0 nil
+                    "-group" "Emacs"
+                    "-title" title
+                    "-sender" "org.gnu.Emacs"
+                    "-message" message
+                    "-activate" "oeg.gnu.Emacs"))
+    (add-hook 'org-pomodoro-finished-hook
+              (lambda ()
+                (notify-osx "Pomodoro completed!" "Time for a break.")))
+    (add-hook 'org-pomodoro-break-finished-hook
+              (lambda ()
+                (notify-osx "Pomodoro Short Break Finished" "Ready for Another?")))
+    (add-hook 'org-pomodoro-long-break-finished-hook
+              (lambda ()
+                (notify-osx "Pomodoro Long Break Finished" "Ready for Another?")))
+    (add-hook 'org-pomodoro-killed-hook
+              (lambda ()
+                (notify-osx "Pomodoro Killed" "One does not simply kill a pomodoro!")))))
+
 
 
 ;; (def-package! org-super-agenda
