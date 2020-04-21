@@ -18,3 +18,5 @@
 
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setq display-line-numbers-type 'relative)
